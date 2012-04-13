@@ -14,8 +14,8 @@
  **********************************************************/
 #define DEV_NAME "/tyCo/1"
 #define BAUDS 9600
-#define TIME_SEC_CYCLE_SECONDS 10
-#define TIME_SEC_CYCLE_NANOSECONDS 10000000000
+#define TIME_SEC_CYCLE_SECONDS 5
+#define TIME_SEC_CYCLE_NANOSECONDS 5000000000
 #define TOTAL_SEC_CYCLES 1
 
 /**********************************************************
