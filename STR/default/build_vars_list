@@ -1,0 +1,5 @@
+set WIND_BASE D:/Programas/WindRiver/vxworks-6.8
+set VSB_DIR D:/Programas/WindRiver/vxworks-6.8/target/lib
+set BSP_DIR D:/Programas/WindRiver/vxworks-6.8/target/config/simpc
+set ANALYSIS_DKM_DIR D:/Programas/WindRiver/vxworks-6.8/target/lib/simpc/SIMNT/common/dkm/analysis
+set PRJ_FULL_PATH D:/Documentos/STR/workspace/STR

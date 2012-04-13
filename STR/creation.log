@@ -1,0 +1,26 @@
+Output of D:\Programas\WindRiver\vxworks-6.8\host\x86-win32\bin\vxprj.bat create D:/Programas/WindRiver/vxworks-6.8/target/config/simpc diab D:/Documentos/STR/workspace/STR/STR.wpj:
+
+Creating Project ...
+{parsing the BSP Makefile...}
+{extract user defined rules from BSP Makefile...}
+{creating the project file...}
+{creating a default build spec for SIMNT diab ...}
+{creating a component configuration...}
+{calculating included components...}
+ignoring unknown components INCLUDE_CONSTANT_RDY_Q INCLUDE_ELF INCLUDE_IPNET_PACKET_POOL_3 INCLUDE_IPNET_PACKET_POOL_4 INCLUDE_IPNET_PACKET_POOL_5 INCLUDE_IPNET_PACKET_POOL_6 INCLUDE_SIMNET
+{calculating parameter values...}
+{adding files to project...}
+{generating configuration files...}
+{computing file dependencies...}
+{generating dependencies (sysALib.s)} 0 6
+{generating dependencies (sysLib.c)} 1 6
+{generating dependencies (usrAppInit.c)} 2 6
+{generating dependencies (usrRtpAppInit.c)} 3 6
+{generating dependencies (prjConfig.c)} 4 6
+{generating dependencies (linkSyms.c)} 5 6
+done
+{Validating the configuration...}
+done
+{saving the project...}
+done
+Project created in : D:\Documentos\STR\workspace\STR\STR.wpj
