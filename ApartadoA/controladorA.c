@@ -58,7 +58,7 @@ int init_serial(char *devName, int bauds)
 int read_slope(char * request_buf, char * answer_buf) {
 	
 	strcpy(request_buf,"SLP: REQ\n");
-	simulator(request_buf, answer_buf);
+	wr_arduino(request_buf, answer_buf);
 	int ret;
 	
 	if (0 == strcmp(answer_buf,"SLP:DOWN\n")) { 
@@ -86,7 +86,7 @@ int read_slope(char * request_buf, char * answer_buf) {
  */
 float read_speed(char * request_buf, char * answer_buf) {
 	strcpy(request_buf,"SPD: REQ\n");
-	simulator(request_buf, answer_buf);
+	wr_arduino(request_buf, answer_buf);
 	
 	if (1 == sscanf (answer_buf,"SPD:%f\n",&CURRENT_SPEED)) {
 		displaySpeed(CURRENT_SPEED);  
@@ -109,11 +109,11 @@ int gas_turn(char * request_buf, char * answer_buf) {
 	
 	if(CURRENT_SPEED <= 55.0) {
 		strcpy(request_buf, "GAS: SET\n");
-		simulator(request_buf, answer_buf);
+		wr_arduino(request_buf, answer_buf);
 		displayGas(1);
 	} else {
 		strcpy(request_buf, "GAS: CLR\n");
-		simulator(request_buf, answer_buf);
+		wr_arduino(request_buf, answer_buf);
 		displayGas(0);
 	}
 	
@@ -132,11 +132,11 @@ int break_turn(char * request_buf, char * answer_buf) {
 	
 	if(CURRENT_SPEED <= 55.0) {
 		strcpy(request_buf, "BRK: CLR\n");
-		simulator(request_buf, answer_buf);
+		wr_arduino(request_buf, answer_buf);
 		displayBrake(0);
 	} else {
 		strcpy(request_buf, "BRK: SET\n");
-		simulator(request_buf, answer_buf);
+		wr_arduino(request_buf, answer_buf);
 		displayBrake(1);
 	}
 	
@@ -158,11 +158,11 @@ int mixer_turn(char * request_buf, char * answer_buf) {
 	if(lapse > 30.0) {
 		if(MIXER_STATE) {
 			strcpy(request_buf, "MIX: CLR\n");
-			simulator(request_buf, answer_buf);
+			wr_arduino(request_buf, answer_buf);
 			MIXER_STATE = 0;
 		} else {
 			strcpy(request_buf, "MIX: SET\n");
-			simulator(request_buf, answer_buf);
+			wr_arduino(request_buf, answer_buf);
 			MIXER_STATE = 1;
 		}
 		
@@ -179,6 +179,20 @@ int mixer_turn(char * request_buf, char * answer_buf) {
 		}
 	}
 	return 0;
+}
+
+void wr_arduino(char * request, char * answer) {
+	
+	int ret = 0; 
+	do { 
+		ret = ret + writeSerialMod_9( request[ret] ); 
+	} while (ret < 9); 
+	
+	ret = 0; 
+	do { 
+		ret = ret + readSerialMod_9( answer[ret] ); 
+	} while (ret < 9); 
+	
 }
 
 /**********************************************************

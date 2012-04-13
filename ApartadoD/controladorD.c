@@ -75,19 +75,18 @@ int init_serial(char *devName, int bauds)
  * Esta funcion devuelve un entero en funcion de la pendiente. 1 si es subida,
  * 0 si es plano, -1 si es bajada, 2 si el servidor devolvio error.
  */
-int read_slope(char * request_buf, char * answer_buf) {
+int read_slope(char * request, char * answer) {
 	
-	strcpy(request_buf,"SLP: REQ\n");
-	simulator(request_buf, answer_buf);
-	int ret;
+	strcpy(request,"SLP: REQ\n");
+	wr_arduino(request, answer);
 	
-	if (0 == strcmp(answer_buf,"SLP:DOWN\n")) { 
+	if (0 == strcmp(answer,"SLP:DOWN\n")) { 
 		displaySlope(-1);
 		ret = -1;
-	} else if (0 == strcmp(answer_buf,"SLP:FLAT\n")) { 
+	} else if (0 == strcmp(answer,"SLP:FLAT\n")) { 
 		displaySlope(0);
 		ret = 0;
-	} else if (0 == strcmp(answer_buf,"SLP:  UP\n")) { 
+	} else if (0 == strcmp(answer,"SLP:  UP\n")) { 
 		displaySlope(1);
 		ret = 1;
 	} else {	//Error
@@ -104,11 +103,11 @@ int read_slope(char * request_buf, char * answer_buf) {
  * 
  * Esta funcion devuelve la velocidad actual de la carreta o -1.0 si obtuvo un error
  */
-float read_speed(char * request_buf, char * answer_buf) {
-	strcpy(request_buf,"SPD: REQ\n");
-	simulator(request_buf, answer_buf);
+float read_speed(char * request, char * answer) {
+	strcpy(request,"SPD: REQ\n");
+	wr_arduino(request, answer);
 	
-	if (1 == sscanf (answer_buf,"SPD:%f\n",&CURRENT_SPEED)) {
+	if (1 == sscanf (answer,"SPD:%f\n",&CURRENT_SPEED)) {
 		
 		displaySpeed(CURRENT_SPEED);  
 	} else {
@@ -127,39 +126,39 @@ float read_speed(char * request_buf, char * answer_buf) {
  * La funcion devuelve 0 si el servidor respondio con un OK. Si respondio
  * con un error, devolvera cualquier otro numero.
  */
-int gas_turn_normal_mode(char * request_buf, char * answer_buf) {
+int gas_turn_normal_mode(char * request, char * answer) {
 	
 	if(CURRENT_SPEED <= 55.0) {
-		strcpy(request_buf, "GAS: SET\n");
-		simulator(request_buf, answer_buf);
+		strcpy(request, "GAS: SET\n");
+		wr_arduino(request, answer);
 		displayGas(1);
 	} else {
-		strcpy(request_buf, "GAS: CLR\n");
-		simulator(request_buf, answer_buf);
+		strcpy(request, "GAS: CLR\n");
+		wr_arduino(request, answer);
 		displayGas(0);
 	}
 	
-	return strcmp(answer_buf,"GAS:  OK\n");
+	return strcmp(answer,"GAS:  OK\n");
 }
 
-int gas_turn_break_mode(char * request_buf, char * answer_buf) {
+int gas_turn_break_mode(char * request, char * answer) {
 	
 	if(CURRENT_SPEED <= 2.5) {
-		strcpy(request_buf, "GAS: SET\n");
-		simulator(request_buf, answer_buf);
+		strcpy(request, "GAS: SET\n");
+		wr_arduino(request, answer);
 		displayGas(1);
 	} else {
-		strcpy(request_buf, "GAS: CLR\n");
-		simulator(request_buf, answer_buf);
+		strcpy(request, "GAS: CLR\n");
+		wr_arduino(request, answer);
 		displayGas(0);
 	}
 	
-	return strcmp(answer_buf,"GAS:  OK\n");
+	return strcmp(answer,"GAS:  OK\n");
 }
 
-void gas_turn_emergency_mode(char * request_buf, char * answer_buf) {
-	strcpy(request_buf, "GAS: CLR\n");
-	simulator(request_buf, answer_buf);
+void gas_turn_emergency_mode(char * request, char * answer) {
+	strcpy(request, "GAS: CLR\n");
+	wr_arduino(request, answer);
 	displayGas(0);
 }
 
@@ -171,39 +170,39 @@ void gas_turn_emergency_mode(char * request_buf, char * answer_buf) {
  * La funcion devuelve 0 si el servidor respondio con un OK. Si respondio
  * con un error, devolvera cualquier otro numero.
  */
-int break_turn_normal_mode(char * request_buf, char * answer_buf) {
+int break_turn_normal_mode(char * request, char * answer) {
 	
 	if(CURRENT_SPEED <= 55.0) {
-		strcpy(request_buf, "BRK: CLR\n");
-		simulator(request_buf, answer_buf);
+		strcpy(request, "BRK: CLR\n");
+		wr_arduino(request, answer);
 		displayBrake(0);
 	} else {
-		strcpy(request_buf, "BRK: SET\n");
-		simulator(request_buf, answer_buf);
+		strcpy(request, "BRK: SET\n");
+		wr_arduino(request, answer);
 		displayBrake(1);
 	}
 	
-	return strcmp(answer_buf,"BRK:  OK\n");
+	return strcmp(answer,"BRK:  OK\n");
 }
 
-int break_turn_break_mode(char * request_buf, char * answer_buf) {
+int break_turn_break_mode(char * request, char * answer) {
 	
 	if(CURRENT_SPEED <= 2.5) {
-		strcpy(request_buf, "BRK: CLR\n");
-		simulator(request_buf, answer_buf);
+		strcpy(request, "BRK: CLR\n");
+		wr_arduino(request, answer);
 		displayBrake(0);
 	} else {
-		strcpy(request_buf, "BRK: SET\n");
-		simulator(request_buf, answer_buf);
+		strcpy(request, "BRK: SET\n");
+		wr_arduino(request, answer);
 		displayBrake(1);
 	}
 	
-	return strcmp(answer_buf,"BRK:  OK\n");
+	return strcmp(answer,"BRK:  OK\n");
 }
 
-void break_turn_emergency_mode(char * request_buf, char * answer_buf) {
-	strcpy(request_buf, "BRK: SET\n");
-	simulator(request_buf, answer_buf);
+void break_turn_emergency_mode(char * request, char * answer) {
+	strcpy(request, "BRK: SET\n");
+	wr_arduino(request, answer);
 	displayBrake(1);
 }
 
@@ -212,23 +211,23 @@ void break_turn_emergency_mode(char * request_buf, char * answer_buf) {
  * devuelve 0 en caso de exito, cualquier otro numero en case
  * de error.
  */
-int mixer_turn(char * request_buf, char * answer_buf) {
+int mixer_turn(char * request, char * answer) {
 	
 	time_t current = time(NULL);
 	double lapse = difftime(current, TIME_LAST_CHANGE_MIXER);
 	
 	if(lapse > 30.0) {
 		if(MIXER_STATE) {
-			strcpy(request_buf, "MIX: CLR\n");
-			simulator(request_buf, answer_buf);
+			strcpy(request, "MIX: CLR\n");
+			wr_arduino(request, answer);
 			MIXER_STATE = 0;
 		} else {
-			strcpy(request_buf, "MIX: SET\n");
-			simulator(request_buf, answer_buf);
+			strcpy(request, "MIX: SET\n");
+			wr_arduino(request, answer);
 			MIXER_STATE = 1;
 		}
 		
-		int ret = strcmp(answer_buf,"MIX:  OK\n"); 
+		int ret = strcmp(answer,"MIX:  OK\n"); 
 		if(ret == 0) {
 			displayMix(MIXER_STATE);
 			
@@ -250,13 +249,13 @@ int mixer_turn(char * request_buf, char * answer_buf) {
  * Devuelve 1 si estamos a oscuras; 0 si no esta oscuro; -1 en
  * caso de error.
  */
-int read_light_sensor(char * request_buf, char * answer_buf) {
+int read_light_sensor(char * request, char * answer) {
 	
-	strcpy(request_buf, "LIT: REQ\n");
-	simulator(request_buf, answer_buf);
+	strcpy(request, "LIT: REQ\n");
+	wr_arduino(request, answer);
 	
 	int light;
-	if(sscanf(answer_buf,"LIT:%d\n",&light) == 1) {
+	if(sscanf(answer,"LIT:%d\n",&light) == 1) {
 		
 		IS_DARK = light < 50 ? 1 : 0;
 		displayLightSensor(IS_DARK);
@@ -274,39 +273,39 @@ int read_light_sensor(char * request_buf, char * answer_buf) {
  * La funcion devuelve 0 en caso de exito, cualquier otro
  * numero en caso de error.
  */
-int lights_turn_normal_mode(char * request_buf, char * answer_buf) {
+int lights_turn_normal_mode(char * request, char * answer) {
 	
 	if(IS_DARK) {
-		strcpy(request_buf, "LAM: SET\n");
-		simulator(request_buf, answer_buf);
+		strcpy(request, "LAM: SET\n");
+		wr_arduino(request, answer);
 	} else {
-		strcpy(request_buf, "LAM: CLR\n");
-		simulator(request_buf, answer_buf);
+		strcpy(request, "LAM: CLR\n");
+		wr_arduino(request, answer);
 	}
 	
-	int ret = strcmp(answer_buf,"LAM:  OK\n");
+	int ret = strcmp(answer,"LAM:  OK\n");
 	displayLamps(IS_DARK);
 	
 	return ret;
 }
 
-int lights_turn_break_mode(char * request_buf, char * answer_buf) {
+int lights_turn_break_mode(char * request, char * answer) {
 	
-	strcpy(request_buf, "LAM: SET\n");
-	simulator(request_buf, answer_buf);
+	strcpy(request, "LAM: SET\n");
+	wr_arduino(request, answer);
 	
-	int ret = strcmp(answer_buf,"LAM:  OK\n");
+	int ret = strcmp(answer,"LAM:  OK\n");
 	displayLamps(1);
 	
 	return ret;
 }
 
-int lights_turn_stop_mode(char * request_buf, char * answer_buf) {
-	return lights_turn_break_mode(request_buf, answer_buf);
+int lights_turn_stop_mode(char * request, char * answer) {
+	return lights_turn_break_mode(request, answer);
 }
 
-int lights_turn_emergency_mode(char * request_buf, char * answer_buf) {
-	return lights_turn_break_mode(request_buf, answer_buf);
+int lights_turn_emergency_mode(char * request, char * answer) {
+	return lights_turn_break_mode(request, answer);
 }
 
 /*
@@ -314,11 +313,11 @@ int lights_turn_emergency_mode(char * request_buf, char * answer_buf) {
  * y devuelve el modo en el que esta la carretilla despues de tener
  * en cuenta la distancia.
  */
-int read_distance(char * request_buf, char * answer_buf) {
-	strcpy(request_buf, "DS:  REQ\n");
-	simulator(request_buf, answer_buf);
+int read_distance(char * request, char * answer) {
+	strcpy(request, "DS:  REQ\n");
+	wr_arduino(request, answer);
 	
-	if(sscanf(answer_buf, "DS:%u\n", &CURRENT_DISTANCE) == 1) {
+	if(sscanf(answer, "DS:%u\n", &CURRENT_DISTANCE) == 1) {
 		displayDistance(CURRENT_DISTANCE);
 		
 		switch(CURRENT_MODE) {
@@ -354,14 +353,14 @@ int read_distance(char * request_buf, char * answer_buf) {
 /*
  * 
  */
-int stop_ends(char * request_buf, char * answer_buf) {
-	strcpy(request_buf, "STP: REQ\n");
-	simulator(request_buf, answer_buf);
+int stop_ends(char * request, char * answer) {
+	strcpy(request, "STP: REQ\n");
+	wr_arduino(request, answer);
 	
-	if(strcmp(answer_buf, "STP:  GO\n") == 0) {
+	if(strcmp(answer, "STP:  GO\n") == 0) {
 		END_STOP = 0;
 		CURRENT_MODE = 0;
-	} else if(strcmp(answer_buf, "STP:STOP\n") == 0) {
+	} else if(strcmp(answer, "STP:STOP\n") == 0) {
 		END_STOP = 1;
 	} else {
 		//Error
@@ -373,14 +372,14 @@ int stop_ends(char * request_buf, char * answer_buf) {
 	return END_STOP;
 }
 
-int enable_emergency_mode(char * request_buf, char * answer_buf) {
+int enable_emergency_mode(char * request, char * answer) {
 	if(CURRENT_MODE == 3)
 		return CURRENT_MODE;
 	
-	strcpy(request_buf, "ERR: SET\n");
-	simulator(request_buf, answer_buf);
+	strcpy(request, "ERR: SET\n");
+	wr_arduino(request, answer);
 	
-	if(strcmp(answer_buf, "ERR:  OK\n") == 0) 
+	if(strcmp(answer, "ERR:  OK\n") == 0) 
 		return CURRENT_MODE;
 	
 	return -1;
@@ -430,6 +429,20 @@ void update_sec_cycle(int mode, int * current_cycle) {
 		
 	}
 	
+	
+}
+
+void wr_arduino(char * request, char * answer) {
+	
+	int ret = 0; 
+	do { 
+		ret = ret + writeSerialMod_9( request[ret] ); 
+	} while (ret < 9); 
+	
+	ret = 0; 
+	do { 
+		ret = ret + readSerialMod_9( answer[ret] ); 
+	} while (ret < 9); 
 	
 }
 
