@@ -41,6 +41,12 @@ int displayBrake(int brake);
 int displayMix(int mixer);
 
 
+void diffTime(struct timespec end, struct timespec start, struct timespec *diff);
+
+/**********************************************************
+ *  Function: addTime 
+ *********************************************************/
+void addTime(struct timespec end, struct timespec start, struct timespec *add); 
 
 /**********************************************************
  *  Function: simulator

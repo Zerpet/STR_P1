@@ -14,6 +14,9 @@
  **********************************************************/
 #define DEV_NAME "/tyCo/1"
 #define BAUDS 9600
+#define TIME_SEC_CYCLE_SECONDS 10
+#define TIME_SEC_CYCLE_NANOSECONDS 10000000000
+#define TOTAL_SEC_CYCLES 1
 
 /**********************************************************
  *  Global Variables 
@@ -210,6 +213,10 @@ void *controller(void *arg)
 	memset(request,'\0',10);
 	memset(answer,'\0',10);
     
+	struct timespec timeInit, timeEnd, timeDiff, timePeriod;
+	timePeriod.tv_sec = (time_t) TIME_SEC_CYCLE_SECONDS;
+	timePeriod.tv_nsec = (long) TIME_SEC_CYCLE_NANOSECONDS;
+	
 	while(1) {
 //    	- Lectura de la pendiente actual
     	if(read_slope(request, answer) == 2) {
@@ -244,24 +251,13 @@ void *controller(void *arg)
 			printf("Error in break. Current value = ");
 		}
     	
+		sec_cycle = (sec_cycle + 1) % TOTAL_SEC_CYCLES;
+    	clock_gettime(CLOCK_REALTIME, &timeEnd);
     	
-// read speed and draw it
-//		strcpy(request,"SPD: REQ\n");
-//		simulator(request, answer);
-//		// uncomment to access arduino
-//		//write(fdSerie, request, 9);
-//		//read (fdSerie, answer, 9);
-//		if (1 == sscanf (answer,"SPD:%f\n",&speed)) {
-//			displaySpeed(speed);  
-//		}
-//		
-//		// read slope and draw it
-//		strcpy(request,"SLP: REQ\n");
-//		simulator(request, answer);
-//        if (0 == strcmp(answer,"SLP:DOWN\n")) displaySlope(-1);	
-//        if (0 == strcmp(answer,"SLP:FLAT\n")) displaySlope(0);	
-//        if (0 == strcmp(answer,"SLP:  UP\n")) displaySlope(1);
-//				
+    	diffTime(timeEnd, timeInit, &timeDiff);
+    	diffTime(timePeriod, timeDiff, &timeDiff);
+    	nanosleep(&timeDiff, NULL);
+		addTime(timeInit, timePeriod, &timeInit);		
     }
     //return (0);
 }
